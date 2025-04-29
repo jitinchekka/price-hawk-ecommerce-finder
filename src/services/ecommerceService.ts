@@ -3,7 +3,7 @@ import { toast } from "sonner";
 
 export interface PriceResult {
   id: string;
-  store: "dmart" | "swiggy" | "amazon" | "jiomart";
+  store: "dmart" | "swiggy" | "amazon" | "jiomart" | "blinkit" | "zepto";
   storeName: string;
   storeIcon: string;
   productName: string;
@@ -13,160 +13,6 @@ export interface PriceResult {
   available: boolean;
   deliveryStatus: string;
 }
-
-// Mock data for demonstration
-const mockDataMap = {
-  "milk": [
-    { 
-      id: "dm001",
-      store: "dmart" as const, 
-      storeName: "DMart", 
-      storeIcon: "🛒",
-      productName: "Amul Toned Milk 500ml", 
-      price: 26,
-      url: "https://www.dmart.in/",
-      image: "/placeholder.svg",
-      available: true,
-      deliveryStatus: "Available for delivery" 
-    },
-    { 
-      id: "sw001",
-      store: "swiggy" as const, 
-      storeName: "Swiggy Instamart", 
-      storeIcon: "🛵",
-      productName: "Amul Toned Milk 500ml", 
-      price: 27,
-      url: "https://www.swiggy.com/instamart",
-      image: "/placeholder.svg",
-      available: true,
-      deliveryStatus: "30 min delivery" 
-    },
-    { 
-      id: "am001",
-      store: "amazon" as const, 
-      storeName: "Amazon", 
-      storeIcon: "📦",
-      productName: "Amul Toned Milk 500ml", 
-      price: 28,
-      url: "https://www.amazon.in/",
-      image: "/placeholder.svg",
-      available: true,
-      deliveryStatus: "Delivery tomorrow" 
-    },
-    { 
-      id: "jm001",
-      store: "jiomart" as const, 
-      storeName: "JioMart", 
-      storeIcon: "🔵",
-      productName: "Amul Toned Milk 500ml", 
-      price: 25,
-      url: "https://www.jiomart.com/",
-      image: "/placeholder.svg",
-      available: true,
-      deliveryStatus: "Delivery in 2 hours" 
-    }
-  ],
-  "rice": [
-    { 
-      id: "dm002",
-      store: "dmart" as const, 
-      storeName: "DMart", 
-      storeIcon: "🛒",
-      productName: "Basmati Rice Premium 1kg", 
-      price: 95,
-      url: "https://www.dmart.in/",
-      image: "/placeholder.svg",
-      available: true,
-      deliveryStatus: "Available for delivery" 
-    },
-    { 
-      id: "sw002",
-      store: "swiggy" as const, 
-      storeName: "Swiggy Instamart", 
-      storeIcon: "🛵",
-      productName: "Basmati Rice Premium 1kg", 
-      price: 110,
-      url: "https://www.swiggy.com/instamart",
-      image: "/placeholder.svg",
-      available: true,
-      deliveryStatus: "35 min delivery" 
-    },
-    { 
-      id: "am002",
-      store: "amazon" as const, 
-      storeName: "Amazon", 
-      storeIcon: "📦",
-      productName: "Basmati Rice Premium 1kg", 
-      price: 99,
-      url: "https://www.amazon.in/",
-      image: "/placeholder.svg",
-      available: true,
-      deliveryStatus: "Delivery day after tomorrow" 
-    },
-    { 
-      id: "jm002",
-      store: "jiomart" as const, 
-      storeName: "JioMart", 
-      storeIcon: "🔵",
-      productName: "Basmati Rice Premium 1kg", 
-      price: 89,
-      url: "https://www.jiomart.com/",
-      image: "/placeholder.svg",
-      available: true,
-      deliveryStatus: "Delivery tomorrow" 
-    }
-  ],
-  "bread": [
-    { 
-      id: "dm003",
-      store: "dmart" as const, 
-      storeName: "DMart", 
-      storeIcon: "🛒",
-      productName: "Brown Bread 400g", 
-      price: 40,
-      url: "https://www.dmart.in/",
-      image: "/placeholder.svg",
-      available: true,
-      deliveryStatus: "Available for delivery" 
-    },
-    { 
-      id: "sw003",
-      store: "swiggy" as const, 
-      storeName: "Swiggy Instamart", 
-      storeIcon: "🛵",
-      productName: "Brown Bread 400g", 
-      price: 45,
-      url: "https://www.swiggy.com/instamart",
-      image: "/placeholder.svg",
-      available: true,
-      deliveryStatus: "25 min delivery" 
-    },
-    { 
-      id: "am003",
-      store: "amazon" as const, 
-      storeName: "Amazon", 
-      storeIcon: "📦",
-      productName: "Brown Bread 400g", 
-      price: 42,
-      url: "https://www.amazon.in/",
-      image: "/placeholder.svg",
-      available: false,
-      deliveryStatus: "Currently unavailable" 
-    },
-    { 
-      id: "jm003",
-      store: "jiomart" as const, 
-      storeName: "JioMart", 
-      storeIcon: "🔵",
-      productName: "Brown Bread 400g", 
-      price: 38,
-      url: "https://www.jiomart.com/",
-      image: "/placeholder.svg",
-      available: true,
-      deliveryStatus: "Delivery today" 
-    }
-  ]
-};
 
 export interface SearchParams {
   query: string;
@@ -197,23 +43,123 @@ export const searchProducts = async (params: SearchParams): Promise<PriceResult[
   }
   
   try {
-    // Simulate API call with a delay
-    await new Promise(resolve => setTimeout(resolve, 1500));
+    // Call the real API endpoint
+    const apiUrl = `https://pricewise-jfjv.onrender.com/search_all?query=${encodeURIComponent(query)}&pincode=${pincode}`;
+    const response = await fetch(apiUrl);
     
-    // Get results based on mock data
-    const normalizedQuery = query.toLowerCase().trim();
-    const keywords = ["milk", "rice", "bread"];
-    
-    const matchedKeyword = keywords.find(keyword => normalizedQuery.includes(keyword));
-    
-    if (!matchedKeyword) {
-      // If no specific match, return empty array
-      // In a real implementation, this would call actual e-commerce APIs
-      return [];
+    if (!response.ok) {
+      throw new EcommerceError(`API error: ${response.status} ${response.statusText}`);
     }
     
-    // Return mock data for the matched keyword, sorted by price
-    const results = [...mockDataMap[matchedKeyword as keyof typeof mockDataMap]] as PriceResult[];
+    const data = await response.json();
+    
+    // Process and transform the API response to match our PriceResult interface
+    const results: PriceResult[] = [];
+    
+    // Process Blinkit products
+    if (data.blinkit_products && Array.isArray(data.blinkit_products)) {
+      data.blinkit_products.forEach((item: any, index: number) => {
+        if (item.name && (item.selling_price || item.mrp)) {
+          results.push({
+            id: `blinkit-${index}`,
+            store: "blinkit",
+            storeName: "Blinkit",
+            storeIcon: "🥬",
+            productName: `${item.name}${item.variant ? ` ${item.variant}` : ''}`,
+            price: item.selling_price || item.mrp,
+            url: item.deeplink || "https://blinkit.com/",
+            image: item.image || "/placeholder.svg",
+            available: true,
+            deliveryStatus: "10-15 min delivery"
+          });
+        }
+      });
+    }
+    
+    // Process DMart products
+    if (data.dmart_products && Array.isArray(data.dmart_products)) {
+      data.dmart_products.forEach((item: any, index: number) => {
+        if (item.name && (item.selling_price || item.mrp)) {
+          results.push({
+            id: `dmart-${item.barcode || index}`,
+            store: "dmart",
+            storeName: "DMart",
+            storeIcon: "🛒",
+            productName: `${item.name}${item.variant ? ` ${item.variant}` : ''}`,
+            price: item.selling_price || item.mrp,
+            url: item.deeplink || "https://www.dmart.in/",
+            image: item.image || "/placeholder.svg",
+            available: true,
+            deliveryStatus: "Available for delivery"
+          });
+        }
+      });
+    }
+    
+    // Process Swiggy Instamart products
+    if (data.instamart_products && Array.isArray(data.instamart_products)) {
+      data.instamart_products.forEach((item: any, index: number) => {
+        if (item.name && (item.selling_price || item.mrp)) {
+          results.push({
+            id: `swiggy-${index}`,
+            store: "swiggy",
+            storeName: "Swiggy Instamart",
+            storeIcon: "🛵",
+            productName: `${item.name}${item.variant ? ` ${item.variant}` : ''}`,
+            price: item.selling_price || item.mrp,
+            url: item.deeplink || "https://www.swiggy.com/instamart",
+            image: item.image || "/placeholder.svg",
+            available: true,
+            deliveryStatus: "30-45 min delivery"
+          });
+        }
+      });
+    }
+    
+    // Process JioMart products
+    if (data.jiomart_products && Array.isArray(data.jiomart_products)) {
+      data.jiomart_products.forEach((item: any, index: number) => {
+        if (item.name && (item.selling_price || item.mrp)) {
+          results.push({
+            id: `jiomart-${item.barcode || index}`,
+            store: "jiomart",
+            storeName: "JioMart",
+            storeIcon: "🔵",
+            productName: `${item.name}${item.variant ? ` ${item.variant}` : ''}`,
+            price: item.selling_price || item.mrp,
+            url: item.deeplink || "https://www.jiomart.com/",
+            image: item.image || "/placeholder.svg",
+            available: true,
+            deliveryStatus: "Delivery in 2-3 hours"
+          });
+        }
+      });
+    }
+    
+    // Process Zepto products
+    if (data.zepto_products && Array.isArray(data.zepto_products)) {
+      data.zepto_products.forEach((item: any, index: number) => {
+        if (item.name && (item.selling_price || item.mrp)) {
+          results.push({
+            id: `zepto-${index}`,
+            store: "zepto",
+            storeName: "Zepto",
+            storeIcon: "⚡",
+            productName: `${item.name}${item.variant ? ` ${item.variant}` : ''}`,
+            price: item.selling_price || item.mrp,
+            url: item.deeplink || "https://www.zeptonow.com/",
+            image: item.image || "/placeholder.svg",
+            available: true,
+            deliveryStatus: "10 min delivery"
+          });
+        }
+      });
+    }
+    
+    // If no results found
+    if (results.length === 0) {
+      return [];
+    }
     
     // Sort by price (lowest to highest)
     return results.sort((a, b) => a.price - b.price);
