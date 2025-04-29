@@ -19,7 +19,7 @@ const mockDataMap = {
   "milk": [
     { 
       id: "dm001",
-      store: "dmart", 
+      store: "dmart" as const, 
       storeName: "DMart", 
       storeIcon: "🛒",
       productName: "Amul Toned Milk 500ml", 
@@ -31,7 +31,7 @@ const mockDataMap = {
     },
     { 
       id: "sw001",
-      store: "swiggy", 
+      store: "swiggy" as const, 
       storeName: "Swiggy Instamart", 
       storeIcon: "🛵",
       productName: "Amul Toned Milk 500ml", 
@@ -43,7 +43,7 @@ const mockDataMap = {
     },
     { 
       id: "am001",
-      store: "amazon", 
+      store: "amazon" as const, 
       storeName: "Amazon", 
       storeIcon: "📦",
       productName: "Amul Toned Milk 500ml", 
@@ -55,7 +55,7 @@ const mockDataMap = {
     },
     { 
       id: "jm001",
-      store: "jiomart", 
+      store: "jiomart" as const, 
       storeName: "JioMart", 
       storeIcon: "🔵",
       productName: "Amul Toned Milk 500ml", 
@@ -69,7 +69,7 @@ const mockDataMap = {
   "rice": [
     { 
       id: "dm002",
-      store: "dmart", 
+      store: "dmart" as const, 
       storeName: "DMart", 
       storeIcon: "🛒",
       productName: "Basmati Rice Premium 1kg", 
@@ -81,7 +81,7 @@ const mockDataMap = {
     },
     { 
       id: "sw002",
-      store: "swiggy", 
+      store: "swiggy" as const, 
       storeName: "Swiggy Instamart", 
       storeIcon: "🛵",
       productName: "Basmati Rice Premium 1kg", 
@@ -93,7 +93,7 @@ const mockDataMap = {
     },
     { 
       id: "am002",
-      store: "amazon", 
+      store: "amazon" as const, 
       storeName: "Amazon", 
       storeIcon: "📦",
       productName: "Basmati Rice Premium 1kg", 
@@ -105,7 +105,7 @@ const mockDataMap = {
     },
     { 
       id: "jm002",
-      store: "jiomart", 
+      store: "jiomart" as const, 
       storeName: "JioMart", 
       storeIcon: "🔵",
       productName: "Basmati Rice Premium 1kg", 
@@ -119,7 +119,7 @@ const mockDataMap = {
   "bread": [
     { 
       id: "dm003",
-      store: "dmart", 
+      store: "dmart" as const, 
       storeName: "DMart", 
       storeIcon: "🛒",
       productName: "Brown Bread 400g", 
@@ -131,7 +131,7 @@ const mockDataMap = {
     },
     { 
       id: "sw003",
-      store: "swiggy", 
+      store: "swiggy" as const, 
       storeName: "Swiggy Instamart", 
       storeIcon: "🛵",
       productName: "Brown Bread 400g", 
@@ -143,7 +143,7 @@ const mockDataMap = {
     },
     { 
       id: "am003",
-      store: "amazon", 
+      store: "amazon" as const, 
       storeName: "Amazon", 
       storeIcon: "📦",
       productName: "Brown Bread 400g", 
@@ -155,7 +155,7 @@ const mockDataMap = {
     },
     { 
       id: "jm003",
-      store: "jiomart", 
+      store: "jiomart" as const, 
       storeName: "JioMart", 
       storeIcon: "🔵",
       productName: "Brown Bread 400g", 
@@ -213,7 +213,7 @@ export const searchProducts = async (params: SearchParams): Promise<PriceResult[
     }
     
     // Return mock data for the matched keyword, sorted by price
-    const results = [...mockDataMap[matchedKeyword as keyof typeof mockDataMap]];
+    const results = [...mockDataMap[matchedKeyword as keyof typeof mockDataMap]] as PriceResult[];
     
     // Sort by price (lowest to highest)
     return results.sort((a, b) => a.price - b.price);
