@@ -45,19 +45,47 @@ export const searchProducts = async (params: SearchParams): Promise<PriceResult[
   try {
     // Call the real API endpoint
     const apiUrl = `https://pricewise-jfjv.onrender.com/search_all?query=${encodeURIComponent(query)}&pincode=${pincode}`;
-    const response = await fetch(apiUrl);
+    
+    console.log(`Making API request to: ${apiUrl}`);
+    
+    let response;
+    try {
+      response = await fetch(apiUrl, {
+        mode: 'cors',  // Explicitly request CORS
+        headers: {
+          'Accept': 'application/json',
+        },
+      });
+      
+      console.log('Response status:', response.status);
+      console.log('Response headers:', [...response.headers.entries()]);
+      
+    } catch (fetchError) {
+      console.error('Fetch error details:', fetchError);
+      // Try to determine if it's a CORS issue
+      const errorMessage = fetchError instanceof Error ? fetchError.message : String(fetchError);
+      if (errorMessage.includes('CORS') || errorMessage.includes('cross-origin')) {
+        throw new EcommerceError("CORS error: The API doesn't allow requests from this origin. Try using a CORS proxy or enabling CORS on the server.");
+      } else {
+        throw new EcommerceError(`Network error: ${errorMessage}`);
+      }
+    }
     
     if (!response.ok) {
+      const errorText = await response.text().catch(() => 'Could not read error response');
+      console.error('API error response:', errorText);
       throw new EcommerceError(`API error: ${response.status} ${response.statusText}`);
     }
     
     const data = await response.json();
+    console.log('API response data received:', Object.keys(data));
     
     // Process and transform the API response to match our PriceResult interface
     const results: PriceResult[] = [];
     
     // Process Blinkit products
     if (data.blinkit_products && Array.isArray(data.blinkit_products)) {
+      console.log(`Processing ${data.blinkit_products.length} Blinkit products`);
       data.blinkit_products.forEach((item: any, index: number) => {
         if (item.name && (item.selling_price || item.mrp)) {
           results.push({
@@ -78,6 +106,7 @@ export const searchProducts = async (params: SearchParams): Promise<PriceResult[
     
     // Process DMart products
     if (data.dmart_products && Array.isArray(data.dmart_products)) {
+      console.log(`Processing ${data.dmart_products.length} DMart products`);
       data.dmart_products.forEach((item: any, index: number) => {
         if (item.name && (item.selling_price || item.mrp)) {
           results.push({
@@ -98,6 +127,7 @@ export const searchProducts = async (params: SearchParams): Promise<PriceResult[
     
     // Process Swiggy Instamart products
     if (data.instamart_products && Array.isArray(data.instamart_products)) {
+      console.log(`Processing ${data.instamart_products.length} Instamart products`);
       data.instamart_products.forEach((item: any, index: number) => {
         if (item.name && (item.selling_price || item.mrp)) {
           results.push({
@@ -118,6 +148,7 @@ export const searchProducts = async (params: SearchParams): Promise<PriceResult[
     
     // Process JioMart products
     if (data.jiomart_products && Array.isArray(data.jiomart_products)) {
+      console.log(`Processing ${data.jiomart_products.length} JioMart products`);
       data.jiomart_products.forEach((item: any, index: number) => {
         if (item.name && (item.selling_price || item.mrp)) {
           results.push({
@@ -138,6 +169,7 @@ export const searchProducts = async (params: SearchParams): Promise<PriceResult[
     
     // Process Zepto products
     if (data.zepto_products && Array.isArray(data.zepto_products)) {
+      console.log(`Processing ${data.zepto_products.length} Zepto products`);
       data.zepto_products.forEach((item: any, index: number) => {
         if (item.name && (item.selling_price || item.mrp)) {
           results.push({
@@ -157,6 +189,7 @@ export const searchProducts = async (params: SearchParams): Promise<PriceResult[
     }
     
     // If no results found
+    console.log(`Total processed products: ${results.length}`);
     if (results.length === 0) {
       return [];
     }
