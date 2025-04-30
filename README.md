@@ -64,10 +64,13 @@ This project is built with:
 
 Simply open [Lovable](https://lovable.dev/projects/5322bb91-e948-41d1-a106-821189a1cd4b) and click on Share -> Publish.
 
-## Can I connect a custom domain to my Lovable project?
 
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+## Enhancements
+1. Filter by store
+2. Sort by selling price
+3. Change supported stores
+4. Convert pincdoe to supported pincodes dropdown
+5. Add DMart support to some more pincodes in Hyderabad
+6. Group by variant, store to find the best price
+7. Host backend on AWS Lambda
+8. Make these repos private
